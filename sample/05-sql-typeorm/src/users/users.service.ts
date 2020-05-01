@@ -1,15 +1,21 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { CreateUserDto } from './dto/create-user.dto';
-import { User } from './user.entity';
+import {Inject, Injectable} from '@nestjs/common';
+import {CreateUserDto} from './dto/create-user.dto';
+import {User} from './user.entity';
+import {UserRepository} from './user.repository';
+import {getRepositoryToken} from '@nestjs/typeorm';
+import {CONNECTION_NAME} from '../connection';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    @InjectRepository(User)
-    private readonly usersRepository: Repository<User>,
-  ) {}
+    constructor(
+        // @Inject('xxx_UserRepository')
+        @Inject(getRepositoryToken(UserRepository, CONNECTION_NAME))
+        private readonly usersRepository: UserRepository,
+    ) {
+        // this should log 1 for the right repository instance being injected.
+        // however, it returns undefined
+        console.log(this.usersRepository.test);
+    }
 
   create(createUserDto: CreateUserDto): Promise<User> {
     const user = new User();
@@ -30,4 +36,5 @@ export class UsersService {
   async remove(id: string): Promise<void> {
     await this.usersRepository.delete(id);
   }
+
 }

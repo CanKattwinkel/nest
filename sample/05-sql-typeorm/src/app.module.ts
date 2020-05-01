@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
+import {CONNECTION_NAME} from './connection';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { UsersModule } from './users/users.module';
       database: 'test',
       autoLoadEntities: true,
       synchronize: true,
+      name: CONNECTION_NAME,
     }),
     UsersModule,
   ],
